@@ -1,0 +1,52 @@
+package com.globallogic.creditcardpayment.servicesImpl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.globallogic.creditcardpayment.entity.Payment;
+import com.globallogic.creditcardpayment.exceptionHandling.GlobalException;
+import com.globallogic.creditcardpayment.repositories.PaymentRepo;
+import com.globallogic.creditcardpayment.services.PaymentService;
+
+@Service
+public class PaymentServiceImpl implements PaymentService {
+	
+	@Autowired
+	PaymentRepo paymentRepo;
+
+	@Override
+	public List<Payment> showPayment() {
+		return paymentRepo.findAll();
+	}
+
+	@Override
+	public Payment showPaymentById(long id) {
+		return paymentRepo.findById(id).get();
+	}
+	
+	@Override
+	public List<Payment> addPayment(Payment payment) {
+		if(payment.getAmountDue() == 0 || payment.getMethod().isEmpty()) {
+			throw new GlobalException();
+		}
+		paymentRepo.save(payment);
+		return paymentRepo.findAll();
+	}
+
+	@Override
+	public Payment updatePayment(Payment payment) {
+		paymentRepo.save(payment);
+		return payment;
+	}
+
+	@Override
+	public String deletePayment(long id) {
+		paymentRepo.deleteById(id);
+		return "PAYMENT DELETED SUCCESSFULLY";
+	}
+
+
+
+}

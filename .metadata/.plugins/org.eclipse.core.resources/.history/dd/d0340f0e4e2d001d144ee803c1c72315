@@ -1,0 +1,34 @@
+package com.globallogic.creditcardpayment.servicesImpl;
+
+import java.util.List;
+
+import com.globallogic.creditcardpayment.entity.Statement;
+import com.globallogic.creditcardpayment.services.StatementService;
+
+public class StatementServiceImpl implements StatementService {
+
+	@Override
+	public List<Statement> showStatement() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Statement> addStatement(Statement statement) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Statement updateStatement(Statement statement) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String deleteStatement(long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

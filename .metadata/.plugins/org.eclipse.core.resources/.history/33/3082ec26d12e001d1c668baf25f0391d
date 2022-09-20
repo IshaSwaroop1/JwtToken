@@ -1,0 +1,17 @@
+package com.globallogic.creditcardpayment.repositories;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import com.globallogic.creditcardpayment.entity.Statement;
+
+@Repository
+public interface StatementRepo extends JpaRepository<Statement, Long> {
+
+	@Query("select s from Statement s where day(s.billingDate) <= 10")
+	public List<Statement> findAllWithBillingDateBefore();
+
+}

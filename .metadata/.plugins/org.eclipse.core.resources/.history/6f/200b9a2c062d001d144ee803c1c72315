@@ -1,0 +1,27 @@
+package com.globallogic.creditcardpayment.servicesImpl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.globallogic.creditcardpayment.entity.Payment;
+import com.globallogic.creditcardpayment.repositories.PaymentRepo;
+import com.globallogic.creditcardpayment.services.PaymentService;
+
+public class PaymentServiceImpl implements PaymentService {
+	
+	@Autowired
+	PaymentRepo paymentRepo;
+
+	@Override
+	public List<Payment> showPayment() {
+		return paymentRepo.findAll();
+	}
+
+	@Override
+	public List<Payment> addPayment(Payment payment) {
+		paymentRepo.save(payment);
+		return paymentRepo.findAll();
+	}
+
+}

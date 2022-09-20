@@ -1,0 +1,97 @@
+package com.globallogic.creditcardpayment.servicesImpl;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.globallogic.creditcardpayment.entity.Account;
+import com.globallogic.creditcardpayment.entity.CreditCard;
+import com.globallogic.creditcardpayment.entity.Customer;
+import com.globallogic.creditcardpayment.entity.Transaction;
+import com.globallogic.creditcardpayment.repositories.AccountRepo;
+import com.globallogic.creditcardpayment.repositories.CreditCardRepo;
+import com.globallogic.creditcardpayment.repositories.CustomerRepo;
+import com.globallogic.creditcardpayment.repositories.TransactionRepo;
+import com.globallogic.creditcardpayment.services.TransactionService;
+
+@Service
+public class TransactionServiceImpl implements TransactionService {
+
+	@Autowired
+	TransactionRepo transactionRepo;
+
+	@Autowired
+	CustomerRepo customerRepo;
+
+	@Autowired
+	CreditCardRepo creditCardRepo;
+
+	@Autowired
+	AccountRepo accountRepo;
+
+	@Override
+	public List<Transaction> showTransaction() {
+		return transactionRepo.findAll();
+	}
+
+	@Override
+	public Transaction showTransactionDetails(long id) {
+		return transactionRepo.findById(id).get();
+	}
+
+	@Override
+	public String addTransaction(Transaction transaction) {
+		Customer customer = customerRepo.findById(transaction.getCustomer().getId()).get();
+		transaction.setCustomer(customer);
+
+		// current date from system
+		java.util.Date d = new java.util.Date();
+		long date = d.getTime();
+		java.sql.Date ssd = new java.sql.Date(date);
+		transaction.setTranDate(ssd);
+
+		// set card number from credit card details of customer
+		CreditCard creditcard = creditCardRepo.findById(customer.getCreditCard().getId()).get();
+		transaction.setCardNumber(creditcard.getCardNumber());
+
+		// update balance in account table after transaction
+		Account account = accountRepo.findById(customer.getAccount().getAccountid()).get();
+		if (account.getBalance() > transaction.getAmount()) {
+			double updateBalance = account.getBalance() - transaction.getAmount();
+			accountRepo.setBalanceForAccount(updateBalance, account.getAccountid());
+			transactionRepo.save(transaction);
+			return "TRANSACTION SUCCESSFULL - MAIL SENT FOR TRANSACTION ";
+		}
+		return "TRANSACTION UNSUCCESSFULL - INSUFFICIENT BALANCE ";
+	}
+
+	@Override
+	public String updateTransaction(Transaction transaction) {
+		
+		Customer customer = customerRepo.findById(transaction.getCustomer().getId()).get();
+		transaction.setCustomer(customer);
+
+		// set card number from credit card details of customer
+		CreditCard creditcard = creditCardRepo.findById(customer.getCreditCard().getId()).get();
+		transaction.setCardNumber(creditcard.getCardNumber());
+
+		// update balance in account table after transaction
+		Account account = accountRepo.findById(customer.getAccount().getAccountid()).get();
+		if (account.getBalance() > transaction.getAmount()) {
+			double updateBalance = account.getBalance() - transaction.getAmount();
+			accountRepo.setBalanceForAccount(updateBalance, account.getAccountid());
+			transactionRepo.save(transaction);
+			return "TRANSACTION DETAILS UPDATED ";
+		}
+		return "TRANSACTION AMOUNT DETAILS CANNOT BE UPDATED  - INSUFFICIENT BALANCE ";
+	}
+
+	@Override
+	public String deleteTransaction(long id) {
+		transactionRepo.deleteById(id);
+		return "TRANSACTION DELETED SUCCESSFULLY";
+	}
+
+}

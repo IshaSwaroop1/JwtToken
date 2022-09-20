@@ -1,0 +1,14 @@
+package com.globallogic.creditcardpayment.services;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public interface LoginService {
+
+	// GET -> CHECK ADMIN LOGIN
+	public String adminLogin(String id, String password);
+
+	// GET -> CHECK CUSTOMER LOGIN
+	public String customerLogin(String id, String password);
+
+}

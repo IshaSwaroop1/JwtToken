@@ -1,0 +1,54 @@
+package com.globallogic.creditcardpayment.entity;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.*;
+
+
+@Entity
+@Table(name = "customer")
+public class Customer {
+	
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	long id;
+	
+	@OneToOne(cascade = CascadeType.PERSIST)
+	User user;
+	
+	@Column
+	String name;
+	
+	@Column
+	String email;
+	
+	@Column
+	long phoneNo;
+	
+	@Column
+	Date dateOfBirth; 
+	
+	@OneToMany(cascade = CascadeType.PERSIST)
+	List<Address> address;
+	
+	@OneToOne(cascade = CascadeType.PERSIST)
+	Account account;
+	
+	@OneToMany(cascade = CascadeType.PERSIST)
+	List<Statement> statement;
+	
+	@OneToMany(cascade = CascadeType.PERSIST)
+	List<Transaction> transaction;
+	
+	@OneToOne(cascade = CascadeType.PERSIST)
+	CreditCard creditCard;
+	
+	
+	
+	
+	
+	
+
+}

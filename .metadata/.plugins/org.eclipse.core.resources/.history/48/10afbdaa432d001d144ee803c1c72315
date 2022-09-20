@@ -1,0 +1,31 @@
+package com.globallogic.creditcardpayment.services;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.globallogic.creditcardpayment.entity.Admin;
+import com.globallogic.creditcardpayment.entity.User;
+
+@Service
+public interface AdminService {
+
+	// GET -> CHECK ADMIN LOGIN
+	public String adminLogin(String id, String password);
+
+	// POST -> ADD ADMIN ID AND PASSWORD
+	public List<Admin> addAdmin(Admin admin);
+
+	// GET ->SHOW ALL ADMIN(USERID AND PASSWORD)
+	public List<Admin> showAdmin();
+
+	// POST ->ADD USER(USERID AND PASSWORD)
+	public List<User> addUser(User user);
+
+	// PUT ->UPDATE USER(USERID AND PASSWORD)
+	public User updateUser(User user);
+
+	// DELETE ->DELETE USER
+	public String deleteUser(long id);
+
+}

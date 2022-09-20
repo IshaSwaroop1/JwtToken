@@ -1,0 +1,30 @@
+package com.globallogic.creditcardpayment.servicesImpl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.globallogic.creditcardpayment.entity.User;
+import com.globallogic.creditcardpayment.repositories.UserRepo;
+import com.globallogic.creditcardpayment.services.LoginService;
+
+@Service
+public class LoginServiceImpl implements LoginService {
+	
+	@Autowired
+	UserRepo userRepo;
+
+	@Override
+	public String adminLogin(String id, String password) {
+		List<User> user = userRepo.findAll();
+		
+		for(User u : user) {
+			if(u.getUserId().equalsIgnoreCase(id) && u.getPassword().equalsIgnoreCase(password)) {
+				return "ADMIN LOGIN SUCCESSFULL";
+			}
+		}
+		return "INVALID USERID OR PASSWORD";
+	}
+
+}

@@ -1,0 +1,65 @@
+package com.globallogic.creditcardpayment.servicesImpl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.globallogic.creditcardpayment.entity.User;
+import com.globallogic.creditcardpayment.repositories.UserRepo;
+import com.globallogic.creditcardpayment.services.UserService;
+
+@Service
+public class UserServiceImpl implements UserService {
+	
+	@Autowired
+	UserRepo userRepo;
+
+	@Override
+	public String adminLogin(String id, String password) {
+		List<User> user = userRepo.findAll();
+		
+		for(User u : user) {
+			if(u.getUserId().equalsIgnoreCase(id) && u.getPassword().equalsIgnoreCase(password)) {
+				return "ADMIN LOGIN SUCCESSFULL";
+			}
+		}
+		return "INVALID USERID OR PASSWORD";
+	}
+	
+	@Override
+	public String customerLogin(String id, String password) {
+		List<User> user = userRepo.findAll();
+		
+		for(User u : user) {
+			if(u.getUserId().equalsIgnoreCase(id) && u.getPassword().equalsIgnoreCase(password)) {
+				return "CUSTOMER LOGIN SUCCESSFULL";
+			}
+		}
+		return "INVALID USERID OR PASSWORD";
+	}
+
+	@Override
+	public List<User> showUser() {
+		return userRepo.findAll();
+	}
+
+	@Override
+	public List<User> addUser(User user) {
+		userRepo.save(user);
+		return userRepo.findAll();
+	}
+
+	@Override
+	public User updateUser(User user) {
+		userRepo.save(user);
+		return user;
+	}
+
+	@Override
+	public String deleteUser(long id) {
+		userRepo.deleteById(id)
+		return "USER DETAILS DELETED SUCCESSFULLY";
+	}
+
+}

@@ -1,0 +1,134 @@
+package com.globallogic.creditcardpayment.servicesImpl;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.List;
+
+import javax.mail.MessagingException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.globallogic.creditcardpayment.entity.Account;
+import com.globallogic.creditcardpayment.entity.Customer;
+import com.globallogic.creditcardpayment.entity.Statement;
+import com.globallogic.creditcardpayment.entity.Transaction;
+import com.globallogic.creditcardpayment.pdfAndEmailService.EmailSenderService;
+import com.globallogic.creditcardpayment.pdfAndEmailService.PdfGenerator;
+import com.globallogic.creditcardpayment.repositories.AccountRepo;
+import com.globallogic.creditcardpayment.repositories.CustomerRepo;
+import com.globallogic.creditcardpayment.repositories.StatementRepo;
+import com.globallogic.creditcardpayment.repositories.TransactionRepo;
+import com.globallogic.creditcardpayment.services.StatementService;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+
+@Service
+public class StatementServiceImpl implements StatementService {
+
+	@Autowired
+	StatementRepo statementRepo;
+
+	@Autowired
+	CustomerRepo customerRepo;
+
+	@Autowired
+	TransactionRepo transactionRepo;
+
+	@Autowired
+	AccountRepo accountRepo;
+
+	@Autowired
+	PdfGenerator pdfGenerator;
+
+	@Autowired
+	private EmailSenderService emailSenderService;
+
+	@Override
+	public List<Statement> showAllStatement() {
+		return statementRepo.findAll();
+	}
+
+	@Override
+	public String addStatement(Statement statement) {
+		Customer customer = customerRepo.findById(statement.getCustomer().getId()).get();
+		statement.setCustomer(customer);
+
+		LocalDate endDate = statement.getBillingDate();
+		LocalDate startDate = endDate.plusDays(-31); // date of last month
+		System.out.println(customer.getId());
+
+		// CHECKING IF STATEMENT IS GENERATED FOR CURRENT MONTH AND CUSTOMER ID
+		if (statementRepo.checkForStatement(customer.getId(), endDate.getMonthValue(), endDate.getYear()) != null) {
+			return "STATEMENT ALREADY GENERATED FOR THIS MONTH FOR CUSTOMER ID : " + customer.getId();
+		}
+
+		// calculating amount for transactions done for last 31 days from billing date
+		// -->billed statement
+		double dueAmount = transactionRepo.findAllTransactionsTranDate(startDate, endDate, customer.getId(),
+				"SUCCESSFULL");
+		statement.setDueAmount(dueAmount);
+		statement.setDueDate(endDate.plusDays(10));
+		statementRepo.save(statement);
+		List<Transaction> tr = transactionRepo.findAllTransactionTranDate(startDate, endDate, customer.getId(),"SUCCESSFULL");
+		String path = pdfGenerator.showAllTransactionsAndStatementForCustomerIdAndBillingDatePdf(tr,customer.getId(),startDate,statement.getStatementid());
+		return "STATEMENT GENERATED FOR THIS MONTH AND SENT TO YOUR MAIL";
+	}
+
+	@Override
+	public String updateStatement(Statement statement) {
+		Customer customer = customerRepo.findById(statement.getCustomer().getId()).get();
+		statement.setCustomer(customer);
+
+		LocalDate endDate = statement.getBillingDate();
+		LocalDate startDate = endDate.plusDays(-31); // date of last month
+		System.out.println(customer.getId());
+
+		// CHECKING IF STATEMENT IS GENERATED FOR CURRENT MONTH AND CUSTOMER ID
+		if (!statementRepo.checkForStatement(customer.getId(), endDate.getMonthValue(), endDate.getYear()).isEmpty()) {
+			return "STATEMENT ALREADY GENERATED FOR THIS MONTH FOR CUSTOMER ID : " + customer.getId();
+		}
+
+		// calculating amount for transactions done for last 31 days from billing date
+		// -->billed statement
+		double dueAmount = transactionRepo.findAllTransactionsTranDate(startDate, endDate, customer.getId(),
+				"SUCCESSFULL");
+		statement.setDueAmount(dueAmount);
+		statement.setDueDate(endDate.plusDays(10));
+		statementRepo.save(statement);
+		return "STATEMENT UPDATED FOR THIS MONTH AND SENT TO YOUR MAIL";
+	}
+
+	@Override
+	public String deleteStatement(long id) {
+		statementRepo.deleteById(id);
+		return "STATEMENT DELETED SUCCESSFULLY";
+	}
+
+	@Override
+	public Statement showStatement(long id) {
+		return statementRepo.findById(id).get();
+	}
+
+	@Override
+	public List<Statement> showAllBilledStatementForCustomer(long custId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Statement> showAllUnbilledStatementForCustomer(long custId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

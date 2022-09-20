@@ -1,0 +1,58 @@
+package com.globallogic.creditcardpayment.servicesImpl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.globallogic.creditcardpayment.entity.Customer;
+import com.globallogic.creditcardpayment.repositories.AccountRepo;
+import com.globallogic.creditcardpayment.repositories.AddressRepo;
+import com.globallogic.creditcardpayment.repositories.CreditCardRepo;
+import com.globallogic.creditcardpayment.repositories.CustomerRepo;
+import com.globallogic.creditcardpayment.repositories.UserRepo;
+import com.globallogic.creditcardpayment.services.CustomerService;
+
+public class CustomerServiceImpl implements CustomerService {
+	
+	@Autowired
+	CustomerRepo customerRepo;
+	
+	@Autowired
+	UserRepo userRepo;
+	
+	@Autowired
+	AddressRepo addressRepo;
+	
+	@Autowired
+	AccountRepo accountRepo;
+	
+	@Autowired
+	CreditCardRepo creditCardRepo;
+	
+	
+	
+
+	@Override
+	public List<Customer> showCustomer() {
+		return customerRepo.findAll();
+	}
+
+	@Override
+	public List<Customer> addCustomer(Customer customer) {
+		customerRepo.save(customer);
+		return customerRepo.findAll();
+	}
+
+	@Override
+	public Customer updateCustomer(Customer customer) {
+		
+		return customer;
+	}
+
+	@Override
+	public String deleteCustomer(long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

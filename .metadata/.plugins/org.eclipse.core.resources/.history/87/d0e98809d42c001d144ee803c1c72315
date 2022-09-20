@@ -1,0 +1,9 @@
+package com.globallogic.creditcardpayment.repositories;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.globallogic.creditcardpayment.entity.Login;
+
+public interface LoginRepo extends JpaRepository<Login, ID> {
+
+}

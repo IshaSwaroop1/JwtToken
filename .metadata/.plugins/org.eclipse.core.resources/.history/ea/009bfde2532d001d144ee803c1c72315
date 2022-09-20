@@ -1,0 +1,40 @@
+package com.globallogic.creditcardpayment.servicesImpl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.globallogic.creditcardpayment.entity.CreditCard;
+import com.globallogic.creditcardpayment.entity.CreditCard;
+import com.globallogic.creditcardpayment.repositories.CreditCardRepo;
+import com.globallogic.creditcardpayment.services.CreditCardService;
+
+public class CreditCardServiceImpl implements CreditCardService {
+
+	@Autowired
+	CreditCardRepo creditCardRepo;
+
+	@Override
+	public List<CreditCard> showCreditCard() {
+		return creditCardRepo.findAll();
+	}
+
+	@Override
+	public List<CreditCard> addCreditCard(CreditCard creditCard) {
+		creditCardRepo.save(creditCard);
+		return creditCardRepo.findAll();
+	}
+
+	@Override
+	public CreditCard updateCreditCard(CreditCard creditCard) {
+		creditCardRepo.save(creditCard);
+		return creditCard;
+	}
+
+	@Override
+	public String deleteCreditCard(long id) {
+		creditCardRepo.deleteById(id);
+		return "CREDITCARD DELETED SUCCESSFULLY";
+	}
+
+}

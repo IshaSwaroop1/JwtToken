@@ -1,0 +1,16 @@
+package com.globallogic.creditcardpayment.services;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.globallogic.creditcardpayment.entity.Payment;
+
+@Service
+public interface PaymentService {
+	
+	public List<Payment> showPayment();
+	
+	public List<Payment> addPayment(Payment payment);
+
+}

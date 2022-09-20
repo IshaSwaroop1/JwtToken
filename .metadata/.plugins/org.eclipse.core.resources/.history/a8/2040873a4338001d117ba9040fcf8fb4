@@ -1,0 +1,5 @@
+package com.globallogic.creditcardpayment.exceptionHandling;
+
+public class InvalidCardNumberException {
+
+}

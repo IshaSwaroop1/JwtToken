@@ -1,0 +1,8 @@
+package com.globallogic.creditcardpayment.exceptionHandling;
+
+public class InvalidCreditCardNumberException extends RuntimeException{
+
+	public InvalidCreditCardNumberException(String message) {
+		super(message);
+	}
+}

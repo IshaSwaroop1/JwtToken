@@ -1,0 +1,66 @@
+package com.globallogic.creditcardpayment.servicesImpl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.globallogic.creditcardpayment.entity.Customer;
+import com.globallogic.creditcardpayment.entity.Statement;
+import com.globallogic.creditcardpayment.entity.Statement;
+import com.globallogic.creditcardpayment.repositories.CustomerRepo;
+import com.globallogic.creditcardpayment.repositories.StatementRepo;
+import com.globallogic.creditcardpayment.services.StatementService;
+
+@Service
+public class StatementServiceImpl implements StatementService {
+
+	@Autowired
+	StatementRepo statementRepo;
+	
+	@Autowired
+	CustomerRepo customerRepo;
+
+	@Override
+	public List<Statement> showAllStatement() {
+		return statementRepo.findAll();
+	}
+
+	@Override
+	public List<Statement> addStatement(Statement statement) {
+		Customer customer = customerRepo.findById(statement.getCustomer().getId()).get();
+		statement.setCustomer(customer);
+		statementRepo.save(statement);
+		return statementRepo.findAll();
+	}
+
+	@Override
+	public Statement updateStatement(Statement statement) {
+		Customer customer = customerRepo.findById(statement.getCustomer().getId()).get();
+		statement.setCustomer(customer);
+		statementRepo.save(statement);
+		return statement;
+	}
+
+	@Override
+	public String deleteStatement(long id) {
+		statementRepo.deleteById(id);
+		return "STATEMENT DELETED SUCCESSFULLY";
+	}
+
+	@Override
+	public Statement showStatement(long id) {
+		return statementRepo.findById(id).get();
+	}
+
+	@Override
+	public List<Statement> showAllBilledStatement() {
+		return statementRepo.findAllWithBillingDateBefore();
+	}
+
+	@Override
+	public List<Statement> showAllUnbilledStatement() {
+		return statementRepo.findAllWithBillingDateAfter();
+	}
+
+}

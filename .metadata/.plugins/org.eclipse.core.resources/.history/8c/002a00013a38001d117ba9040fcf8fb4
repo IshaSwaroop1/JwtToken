@@ -1,0 +1,62 @@
+package com.globallogic.creditcardpayment.servicesImpl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.globallogic.creditcardpayment.entity.Account;
+import com.globallogic.creditcardpayment.exceptionHandling.EmptyInputException;
+import com.globallogic.creditcardpayment.entity.Account;
+import com.globallogic.creditcardpayment.repositories.AccountRepo;
+import com.globallogic.creditcardpayment.services.AccountService;
+
+@Service
+public class AccountServiceImpl implements AccountService {
+
+	@Autowired
+	AccountRepo accountRepo;
+
+	@Override
+	public List<Account> showAccount() {
+		return accountRepo.findAll();
+	}
+
+	@Override
+	public Account showAccountById(long id) {
+		return accountRepo.findById(id).get();
+	}
+
+	@Override
+	public String addAccount(Account account) {
+		if (account.getAccountName().isEmpty() || account.getAccountType().isEmpty() || account.getBalance() == 0) {
+			throw new EmptyInputException("601", "Input Fields are empty");
+		}
+		accountRepo.save(account);
+		return "ACCOUNT DETAILS ADDED SUCCESSFULLY";
+	}
+
+	@Override
+	public String updateAccount(Account account) {
+		if (accountRepo.findById(account.getAccountid()).get() != null) {
+			if (account.getAccountid() == 0 || account.getAccountName().isEmpty() || account.getAccountType().isEmpty()
+					|| account.getBalance() == 0) {
+				throw new EmptyInputException("601", "Input Fields are empty");
+			}
+		} else {
+			throw new EmptyInputException("404", "No such value present in database");
+		}
+		accountRepo.save(account);
+		return "ACCOUNT DETAILS UPDATED SUCCESSFULLY";
+	}
+
+	@Override
+	public String deleteAccount(long id) {
+		if (accountRepo.findById(id).get() == null) {
+			throw new EmptyInputException("404", "No such value present in database");
+		} else {
+			accountRepo.deleteById(id);
+			return "ACCOUNT DELETED SUCCESSFULLY";
+		}
+	}
+}

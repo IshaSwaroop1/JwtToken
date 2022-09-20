@@ -1,0 +1,7 @@
+package com.globallogic.creditcardpayment.servicesImpl;
+
+import com.globallogic.creditcardpayment.services.LoginService;
+
+public class LoginServiceImpl implements LoginService {
+
+}

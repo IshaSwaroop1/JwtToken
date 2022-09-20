@@ -1,0 +1,46 @@
+package com.globallogic.creditcardpayment.servicesImpl;
+
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.globallogic.creditcardpayment.entity.CreditCard;
+import com.globallogic.creditcardpayment.entity.CreditCard;
+import com.globallogic.creditcardpayment.repositories.CreditCardRepo;
+import com.globallogic.creditcardpayment.services.CreditCardService;
+
+@Service
+public class CreditCardServiceImpl implements CreditCardService {
+
+	@Autowired
+	CreditCardRepo creditCardRepo;
+
+	@Override
+	public List<CreditCard> showCreditCard() {
+		return creditCardRepo.findAll();
+	}
+
+	@Override
+	public List<CreditCard> addCreditCard(CreditCard creditCard) {
+		LocalDate expDate = creditCard.getExpiryDate();
+		Date date = Date.valueOf(LocalDate.of(expDate));
+		creditCardRepo.save(creditCard);
+		return creditCardRepo.findAll();
+	}
+
+	@Override
+	public CreditCard updateCreditCard(CreditCard creditCard) {
+		creditCardRepo.save(creditCard);
+		return creditCard;
+	}
+
+	@Override
+	public String deleteCreditCard(long id) {
+		creditCardRepo.deleteById(id);
+		return "CREDITCARD DELETED SUCCESSFULLY";
+	}
+
+}

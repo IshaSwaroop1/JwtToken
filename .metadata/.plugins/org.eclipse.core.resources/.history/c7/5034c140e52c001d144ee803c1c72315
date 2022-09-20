@@ -1,0 +1,40 @@
+package com.globallogic.creditcardpayment.entity;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name="admin")
+public class Admin {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@OneToOne(cascade = CascadeType.PERSIST)
+	User user;
+
+	public Admin() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Admin(User user) {
+		super();
+		this.user = user;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	@Override
+	public String toString() {
+		return "Admin [user=" + user + "]";
+	}
+	
+	
+	
+
+}

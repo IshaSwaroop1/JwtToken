@@ -1,0 +1,26 @@
+package com.globallogic.creditcardpayment.services;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.globallogic.creditcardpayment.entity.User;
+
+@Service
+public interface UserService {
+
+	// GET -> CHECK ADMIN LOGIN
+	public String adminLogin(String id, String password);
+
+	// GET -> CHECK CUSTOMER LOGIN
+	public String customerLogin(String id, String password);
+	
+	public List<User> showUser();
+	
+	public List<User> addUser();
+	
+	public User updateUser();
+	
+	public String deleteUser(long id);
+
+}

@@ -1,0 +1,25 @@
+package com.globallogic.creditcardpayment.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.globallogic.creditcardpayment.services.AdminService;
+
+@RestController
+@RequestMapping("/admin")
+public class AdminController {
+	
+	@Autowired
+	AdminService adminService;
+	
+	@GetMapping("/adminLogin/id/{id}/password/{password}")
+	public String adminLogin(@PathVariable("id") String id,@PathVariable("password") String password) {
+		
+		return adminService.adminLogin(id, password);
+		
+	}
+
+}

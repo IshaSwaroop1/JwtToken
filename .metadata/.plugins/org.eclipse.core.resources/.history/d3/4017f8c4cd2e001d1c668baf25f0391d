@@ -1,0 +1,32 @@
+package com.globallogic.creditcardpayment.services;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.globallogic.creditcardpayment.entity.Statement;
+
+@Service
+public interface StatementService {
+
+	// GET ->SHOW ALL Statement
+	public List<Statement> showAllStatement();
+
+	// GET ->SHOW ALL BILLED Statement
+	public List<Statement> showBilledStatement();
+
+	// GET ->SHOW ALL UNBILLED Statement
+	public List<Statement> unbilledStatement();
+
+	// GET ->SHOW Statement By Id
+	public Statement showStatement(long id);
+
+	// POST -> ADD Statement
+	public List<Statement> addStatement(Statement statement);
+
+	// PUT ->UPDATE Statement
+	public Statement updateStatement(Statement statement);
+
+	// DELETE ->DELETE Statement
+	public String deleteStatement(long id);
+}

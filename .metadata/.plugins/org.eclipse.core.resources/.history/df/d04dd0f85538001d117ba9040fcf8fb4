@@ -1,0 +1,98 @@
+package com.globallogic.creditcardpayment.servicesImpl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.globallogic.creditcardpayment.entity.Account;
+import com.globallogic.creditcardpayment.entity.Customer;
+import com.globallogic.creditcardpayment.entity.User;
+import com.globallogic.creditcardpayment.exceptionHandling.GlobalException;
+import com.globallogic.creditcardpayment.repositories.CustomerRepo;
+import com.globallogic.creditcardpayment.repositories.UserRepo;
+import com.globallogic.creditcardpayment.services.UserService;
+
+@Service
+public class UserServiceImpl implements UserService {
+
+	@Autowired
+	UserRepo userRepo;
+
+	@Autowired
+	CustomerRepo customerRepo;
+
+	@Override
+	public String adminSignIn(String id, String password) {
+		List<User> user = userRepo.findAll();
+
+		for (User u : user) {
+			if (u.getUserId().equalsIgnoreCase(id) && u.getPassword().equalsIgnoreCase(password)) {
+				return "ADMIN LOGIN SUCCESSFULL";
+			}
+		}
+		return "INVALID USERID OR PASSWORD";
+	}
+
+	@Override
+	public String customerSignIn(String id, String password) {
+		List<User> user = userRepo.findAll();
+
+		for (User u : user) {
+			if (u.getUserId().equalsIgnoreCase(id) && u.getPassword().equalsIgnoreCase(password)) {
+				return "CUSTOMER LOGIN SUCCESSFULL";
+			}
+		}
+		return "INVALID USERID OR PASSWORD";
+	}
+
+	@Override
+	public List<User> showUser() {
+		return userRepo.findAll();
+	}
+
+	@Override
+	public String addUser(User user) {
+
+		// checking if any data is empty then exception thrown
+		// ("INPUT FIELD IS EMPTY,PLEASE CHECK", HttpStatus.BAD_REQUEST)
+		if (user.getUserId().isEmpty() || user.getPassword().isEmpty()) {
+			throw new GlobalException();
+		}
+
+		userRepo.save(user); // adding data in database
+		return "USER REGISTERED SUCCESSFULLY";
+	}
+
+	@Override
+	public String updateUser(User user) {
+		// checking if any data is empty then exception thrown
+		// ("INPUT FIELD IS EMPTY,PLEASE CHECK", HttpStatus.BAD_REQUEST)
+		if (!user.getUserId().isEmpty() || !user.getPassword().isEmpty() || user.getId() != 0) {
+			throw new GlobalException(); // ("INPUT FIELD IS EMPTY,PLEASE CHECK", HttpStatus.BAD_REQUEST)
+		} else {
+			if (userRepo.findById(user.getId()).get() != null) {
+				throw new GlobalException(); // ("NO SUCH ID EXISTS IN DATABASE", HttpStatus.NOT_FOUND)
+			}
+		}
+		userRepo.save(user);
+		return "USER ID/PASSWORD UPDATED SUCCESSFULLY";
+	}
+
+	@Override
+	public String deleteUser(long id) {
+		// checking if given id is present in database
+		if (userRepo.findById(id).get() == null) {
+			throw new GlobalException(); // ("NO SUCH ID EXISTS IN DATABASE", HttpStatus.NOT_FOUND)
+		} else {
+			User user = userRepo.findById(id).get();
+			Customer customer = customerRepo.findByUserId(user.getId());
+			if (customer != null) {
+				return "USER ID/PASSWORD CANNOT BE DELETED AS MAPPING DONE WITH CUSTOMER"; // returning message
+			}
+			userRepo.deleteById(id); // deleting account if mapping not done
+			return "USER ID/PASSWORD  DELETED SUCCESSFULLY";
+		}
+	}
+
+}

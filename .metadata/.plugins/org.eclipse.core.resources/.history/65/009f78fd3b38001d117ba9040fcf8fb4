@@ -1,0 +1,86 @@
+package com.globallogic.creditcardpayment.servicesImpl;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.globallogic.creditcardpayment.entity.CreditCard;
+import com.globallogic.creditcardpayment.entity.Customer;
+import com.globallogic.creditcardpayment.exceptionHandling.GlobalException;
+import com.globallogic.creditcardpayment.entity.CreditCard;
+import com.globallogic.creditcardpayment.repositories.CreditCardRepo;
+import com.globallogic.creditcardpayment.repositories.CustomerRepo;
+import com.globallogic.creditcardpayment.repositories.TransactionRepo;
+import com.globallogic.creditcardpayment.services.CreditCardService;
+
+@Service
+public class CreditCardServiceImpl implements CreditCardService {
+
+	@Autowired
+	CreditCardRepo creditCardRepo;
+
+	@Autowired
+	CustomerRepo customerRepo;
+
+	@Autowired
+	TransactionRepo transactionRepo;
+
+	@Override
+	public List<CreditCard> showCreditCard() {
+		return creditCardRepo.findAll();
+	}
+
+	@Override
+	public CreditCard showCreditCardById(long cardId) {
+		return creditCardRepo.findById(cardId).get();
+	}
+
+	@Override
+	public String addCreditCard(CreditCard creditCard) {
+		if (creditCard.getBankName().isEmpty() || creditCard.getCardName().isEmpty()
+				|| creditCard.getCardNumber().isEmpty() || creditCard.getCardType().isEmpty()
+				|| creditCard.getExpiryDate() == null) {
+			throw new GlobalException("601", "Input Fields are empty");
+		} else {
+			if (creditCard.getCardNumber().length() != 12) {
+				throw new GlobalException("400", "CARD NUMBER MUST BE OF 12 DIGIT");
+			}
+		}
+		creditCardRepo.save(creditCard);
+		return "CREDIT CARD DETAILS ADDED SUCCESSFULLY";
+	}
+
+	@Override
+	public String updateCreditCard(CreditCard creditCard) {
+		if (creditCardRepo.findById(creditCard.getId()).get() != null) {
+			if (creditCard.getBankName().isEmpty() || creditCard.getCardName().isEmpty()
+					|| creditCard.getCardNumber().isEmpty() || creditCard.getCardType().isEmpty()
+					|| creditCard.getExpiryDate() == null) {
+				throw new GlobalException("601", "Input Fields are empty");
+			} else {
+				if (creditCard.getCardNumber().length() != 12) {
+					throw new GlobalException("400", "CARD NUMBER MUST BE OF 12 DIGIT");
+				}
+			}
+		} else {
+			throw new GlobalException("404", "No such value present in database");
+		}
+		transactionRepo.setCardNumberForTransaction(creditCard.getCardNumber(),creditCard.getId());
+		creditCardRepo.save(creditCard);
+		return "CREDIT CARD DETAILS UPDATED SUCCESSFULLY";
+	}
+
+	@Override
+	public String deleteCreditCard(long id) {
+		creditCardRepo.deleteById(id);
+		return "CREDIT CARD DELETED SUCCESSFULLY";
+	}
+
+}

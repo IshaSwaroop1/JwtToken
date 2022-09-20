@@ -1,0 +1,22 @@
+package com.globallogic.creditcardpayment.servicesImpl;
+
+import java.util.List;
+
+import com.globallogic.creditcardpayment.entity.Admin;
+import com.globallogic.creditcardpayment.services.AdminService;
+
+public class AdminServiceImpl implements AdminService {
+
+	@Override
+	public String adminLogin(String id, String password) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Admin> addAdmin(Admin admin) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

@@ -1,0 +1,29 @@
+package com.globallogic.creditcardpayment.repositories;
+
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
+
+import javax.transaction.Transactional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import com.globallogic.creditcardpayment.entity.Statement;
+
+@Repository
+public interface StatementRepo extends JpaRepository<Statement, Long> {
+
+	@Query("Select s from Statement s where s.customer.id= :customerId And Month(billingDate)= :month AND Year(billingDate)= :year")
+	public Statement checkForStatement(long customerId,int month,int year);
+
+	public Statement findByStatementid(long statementId);
+	
+	@Modifying
+	@Transactional
+	@Query("update Statement s set s.dueAmount = :amount where s.statementid= :statementId")
+	public void setAmountForStatementWhenTransactionUpdated(double amount,long statementId);
+		
+}

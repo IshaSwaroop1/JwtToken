@@ -1,0 +1,24 @@
+package com.globallogic.creditcardpayment.services;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.globallogic.creditcardpayment.entity.CreditCard;
+
+@Service
+public interface CreditCardService {
+
+	// GET ->SHOW ALL CreditCard
+	public List<CreditCard> showCreditCard();
+
+	// POST -> ADD CreditCard
+	public List<CreditCard> addCreditCard(CreditCard creditCard);
+
+	// PUT ->UPDATE CreditCard
+	public CreditCard updateCreditCard(CreditCard creditCard);
+
+	// DELETE ->DELETE CreditCard
+	public String deleteCreditCard(long id);
+
+}

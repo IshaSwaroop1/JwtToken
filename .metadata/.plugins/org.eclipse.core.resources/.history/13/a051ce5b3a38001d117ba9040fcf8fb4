@@ -1,0 +1,65 @@
+package com.globallogic.creditcardpayment.servicesImpl;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.globallogic.creditcardpayment.entity.CreditCard;
+import com.globallogic.creditcardpayment.entity.Customer;
+import com.globallogic.creditcardpayment.entity.CreditCard;
+import com.globallogic.creditcardpayment.repositories.CreditCardRepo;
+import com.globallogic.creditcardpayment.repositories.CustomerRepo;
+import com.globallogic.creditcardpayment.repositories.TransactionRepo;
+import com.globallogic.creditcardpayment.services.CreditCardService;
+
+@Service
+public class CreditCardServiceImpl implements CreditCardService {
+
+	@Autowired
+	CreditCardRepo creditCardRepo;
+	
+	@Autowired
+	CustomerRepo customerRepo;
+	
+	@Autowired
+	TransactionRepo transactionRepo;
+
+	@Override
+	public List<CreditCard> showCreditCard() {
+		return creditCardRepo.findAll();
+	}
+
+	@Override
+	public List<CreditCard> addCreditCard(CreditCard creditCard) {
+		creditCardRepo.save(creditCard);
+		return creditCardRepo.findAll();
+	}
+	
+	@Override
+	public CreditCard showCreditCardById(long cardId) {
+		return creditCardRepo.findById(cardId).get();
+	}
+
+	@Override
+	public CreditCard updateCreditCard(CreditCard creditCard) {
+		transactionRepo.setCardNumberForTransaction(creditCard.getCardNumber(), creditCard.getId());
+		creditCardRepo.save(creditCard);
+		return creditCard;
+	}
+
+	@Override
+	public String deleteCreditCard(long id) {
+		creditCardRepo.deleteById(id);
+		return "CREDIT CARD DELETED SUCCESSFULLY";
+	}
+
+	
+
+}

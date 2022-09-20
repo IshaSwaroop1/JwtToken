@@ -1,0 +1,40 @@
+package com.globallogic.creditcardpayment.servicesImpl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.globallogic.creditcardpayment.entity.Statement;
+import com.globallogic.creditcardpayment.entity.Statement;
+import com.globallogic.creditcardpayment.repositories.StatementRepo;
+import com.globallogic.creditcardpayment.services.StatementService;
+
+public class StatementServiceImpl implements StatementService {
+
+	@Autowired
+	StatementRepo statementRepo;
+
+	@Override
+	public List<Statement> showStatement() {
+		return statementRepo.findAll();
+	}
+
+	@Override
+	public List<Statement> addStatement(Statement statement) {
+		statementRepo.save(statement);
+		return statementRepo.findAll();
+	}
+
+	@Override
+	public Statement updateStatement(Statement statement) {
+		statementRepo.save(statement);
+		return statement;
+	}
+
+	@Override
+	public String deleteStatement(long id) {
+		statementRepo.deleteById(id);
+		return "STATEMENT DELETED SUCCESSFULLY";
+	}
+
+}
